@@ -175,6 +175,17 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
   font-family:var(--mono);font-size:11.5px;color:var(--accent-2);letter-spacing:.02em;
   flex-basis:100%;min-height:1.4em;
 }
+.pipe{position:relative;width:100%;height:54px}
+.pipe canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}
+.stages button{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;background:none;border:0;
+  color:var(--muted);padding:4px 2px;cursor:pointer;text-align:center;line-height:1.25;
+  transition:color .16s ease;
+}
+.stages button:hover{color:var(--ink)}
+.stages button[aria-current="true"]{color:var(--accent);font-weight:500}
+.stages button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .simnote{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--muted);
   margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule);
@@ -211,7 +222,8 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
   <nav>
     <button data-p="1" aria-current="true">01 · what i'd contribute</button>
     <button data-p="2">02 · how i read your result</button>
-    <button data-p="3">03 · what i've done</button>
+    <button data-p="3">03 · the proposal</button>
+    <button data-p="4">04 · what i've done</button>
   </nav>
 
   <div class="page" id="p1">
@@ -289,7 +301,35 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
 
   <div class="page" id="p3" hidden>
   <section class="panel">
-    <div class="panel-head"><span class="tag">E</span><h2>state space of prior work</h2></div>
+    <div class="panel-head"><span class="tag">E</span><h2>a concrete proposal · tap a stage</h2></div>
+    <p class="mine"><b>Aim:</b> replace the ordinal small-vessel-disease score with a continuous one, computed from scans BIOCIS has already collected, and test whether it recovers variance the Fazekas score cannot. <span class="eq">nothing new is scanned</span></p>
+    <div class="pipe"><canvas id="pp" aria-hidden="true"></canvas></div>
+    <div class="stages" role="group" aria-label="pipeline stages">
+      <button data-s="0" aria-current="true">dwi in</button>
+      <button data-s="1">preprocess</button>
+      <button data-s="2">skeletonise</button>
+      <button data-s="3">histogram</button>
+      <button data-s="4">psmd out</button>
+    </div>
+    <div class="legend">
+      <span class="k" id="pk">01</span>
+      <h3 id="pt">dwi in</h3>
+      <p id="pd">The BIOCIS diffusion series as it already sits on the server. The first job is an inventory: direction count, b-values, how many scans survive quality control. That one number decides whether the rest runs, so it comes before anything else.</p>
+    </div>
+  </section>
+
+  <section class="panel prose">
+    <div class="panel-head"><span class="tag">F</span><h2>what it needs, and what could go wrong</h2></div>
+    <p><strong>What it needs.</strong> No new scanning, no new consent, no new visit. The diffusion series, the cognitive battery and the plasma panel are all collected already. What it costs is compute time and someone to run it carefully.</p>
+    <p><strong>What it returns.</strong> One continuous number per participant per visit, with no rater and no cut-point, plus a direct head-to-head against the Fazekas score on the same people.</p>
+    <p><strong>The risk, stated plainly.</strong> If the diffusion sequence sits below roughly 20 directions, PSMD gets noisy and the marker is not worth trusting. That is a one-day check, and it is the first thing I would do rather than the last. If it fails, the fallback is automated white-matter-hyperintensity volume from the FLAIR series: still continuous, still rater-free, just a blunter instrument.</p>
+    <p class="lead">What would settle it: whether the continuous marker explains cognitive variance the ordinal score does not, in the same participants. One model, one comparison, and the answer is either yes or no.</p>
+  </section>
+  </div>
+
+  <div class="page" id="p4" hidden>
+  <section class="panel">
+    <div class="panel-head"><span class="tag">G</span><h2>state space of prior work</h2></div>
     <div class="plot">
       <canvas id="c"></canvas>
       <button class="node" data-i="0" aria-current="true">pipelines at scale</button>
@@ -305,7 +345,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
   </section>
 
   <section class="panel">
-    <div class="panel-head"><span class="tag">F</span><h2>what i'd bring</h2></div>
+    <div class="panel-head"><span class="tag">H</span><h2>what i'd bring</h2></div>
     <ul class="bring">
       <li><span>01</span><div>Automated imaging pipelines (FSL, Luigi, Python) that run unattended over a cohort and return one number per scan, with the provenance to say where it came from.</div></li>
       <li><span>02</span><div>Machine learning on high-dimensional clinical data, validated on held-out <em>subjects</em> rather than held-out scans.</div></li>
@@ -387,7 +427,7 @@ function resize(){
 function draw(){
   const now = performance.now();
   dt = Math.min(0.05, (now - last)/1000); last = now;
-  if(!W){ scFrame(); qFrame(); requestAnimationFrame(draw); return; }
+  if(!W){ scFrame(); qFrame(); ppFrame(); requestAnimationFrame(draw); return; }
   ctx.clearRect(0,0,W,H);
 
   ctx.strokeStyle = col.rule; ctx.lineWidth = 1;
@@ -426,6 +466,7 @@ function draw(){
 
   scFrame();
   qFrame();
+  ppFrame();
   requestAnimationFrame(draw);
 }
 function select(i){
@@ -459,13 +500,14 @@ document.getElementById("cp").addEventListener("click", async e => {
 const SF = {
   1: '<b>three questions i came away with</b> from the biocis protocol and where i’d start on each.',
   2: 'the 90.2%, re-read as a measurement problem. <b>drag the cut-point yourself.</b>',
-  3: 'four years turning images and signals into numbers that hold up on unseen subjects — plotted as a trajectory.'
+  3: 'one marker, out of scans you have already collected. <b>walk the pipeline.</b>',
+  4: 'four years turning images and signals into numbers that hold up on unseen subjects — plotted as a trajectory.'
 };
 const sfEl = document.getElementById("sf");
 const tabs = [...document.querySelectorAll("nav button")];
 const pages = [...document.querySelectorAll(".page")];
 function show(p, push){
-  p = [1,2,3].includes(+p) ? +p : 1;
+  p = [1,2,3,4].includes(+p) ? +p : 1;
   pages.forEach(el => el.hidden = el.id !== "p" + p);
   tabs.forEach(t => t.setAttribute("aria-current", +t.dataset.p === p ? "true" : "false"));
   sfEl.innerHTML = SF[p];
@@ -475,7 +517,8 @@ function show(p, push){
   }
   if(p === 1) qResize();
   if(p === 2) scResize();
-  if(p === 3) resize();
+  if(p === 3) ppResize();
+  if(p === 4) resize();
 }
 tabs.forEach(t => t.addEventListener("click", () => show(+t.dataset.p, true)));
 
@@ -732,15 +775,96 @@ function scFrame(){
 const thEl = document.getElementById("th");
 thEl.addEventListener("input", e => { thresh = +e.currentTarget.value / 100; });
 
+/* ---- page 3: the pipeline ---- */
+const PIPE = [
+  {k:"01", t:"dwi in",
+   d:'The BIOCIS diffusion series as it already sits on the server. The first job is an inventory: direction count, b-values, how many scans survive quality control. That one number decides whether the rest runs, so it comes before anything else.'},
+  {k:"02", t:"preprocess",
+   d:'Motion and eddy-current correction, brain extraction, then a tensor fit to give a mean-diffusivity map for every subject. Standard FSL, scripted so that rerunning the cohort is a command rather than an afternoon.'},
+  {k:"03", t:"skeletonise",
+   d:'TBSS registration into a common space, then each subject’s MD projected onto the shared white-matter skeleton. The skeleton is what strips out the partial-volume and registration noise that makes raw MD histograms unusable.'},
+  {k:"04", t:"histogram",
+   d:'Take the MD values lying on that skeleton and measure the width between the 5th and 95th percentiles. That width is the marker: tissue damage spreads the histogram, and the spread is what gets read.'},
+  {k:"05", t:"psmd out",
+   d:'One number per scan. No rater, no threshold, no visual grading. Then the analysis itself: PSMD against cognition, against the plasma panel, and head-to-head with Fazekas in the same participants.'}
+];
+const ppCv = document.getElementById("pp"), ppx = ppCv.getContext("2d");
+const stageBtns = [...document.querySelectorAll(".stages button")];
+const pkEl = document.getElementById("pk"), ptEl = document.getElementById("pt"), pdEl = document.getElementById("pd");
+let PPW = 0, PPH = 0, psel = 0, ppt = 0;
+
+function ppResize(){
+  const r = ppCv.getBoundingClientRect();
+  if(!r.width) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  PPW = r.width; PPH = r.height;
+  ppCv.width = Math.round(PPW*dpr); ppCv.height = Math.round(PPH*dpr);
+  ppx.setTransform(dpr,0,0,dpr,0,0);
+}
+function ppFrame(){
+  if(!PPW) return;
+  ppt += dt;
+  const y = PPH*0.56, n = PIPE.length;
+  const xs = PIPE.map((_,i)=> PPW*(i + 0.5)/n);
+  ppx.clearRect(0,0,PPW,PPH);
+
+  // rail
+  ppx.strokeStyle = col.rule; ppx.lineWidth = 1;
+  ppx.beginPath(); ppx.moveTo(xs[0], y); ppx.lineTo(xs[n-1], y); ppx.stroke();
+
+  // flowing packets along the rail
+  const span = xs[n-1] - xs[0];
+  for(let j=0;j<4;j++){
+    const u = ((ppt*0.17) + j/4) % 1;
+    ppx.fillStyle = col.accent; ppx.globalAlpha = 0.16 + 0.34*Math.sin(Math.PI*u);
+    ppx.beginPath(); ppx.arc(xs[0] + u*span, y, 2.6, 0, 7); ppx.fill();
+  }
+  ppx.globalAlpha = 1;
+
+  // stage nodes
+  xs.forEach((x,i)=>{
+    const on = i === psel;
+    if(on){
+      ppx.strokeStyle = col.accent; ppx.globalAlpha = .4; ppx.lineWidth = 1;
+      ppx.beginPath(); ppx.arc(x, y, 11, 0, 7); ppx.stroke();
+      ppx.globalAlpha = .16;
+      ppx.beginPath(); ppx.arc(x, y, 17, 0, 7); ppx.stroke();
+      ppx.globalAlpha = 1;
+    }
+    ppx.fillStyle = col.panel;
+    ppx.beginPath(); ppx.arc(x, y, on ? 6.5 : 5, 0, 7); ppx.fill();
+    ppx.strokeStyle = on ? col.accent : col.muted;
+    ppx.globalAlpha = on ? 1 : .55; ppx.lineWidth = on ? 2 : 1.3;
+    ppx.beginPath(); ppx.arc(x, y, on ? 5.5 : 4, 0, 7); ppx.stroke();
+    ppx.globalAlpha = 1;
+    if(i === n-1){
+      ppx.fillStyle = col.accent2;
+      ppx.beginPath(); ppx.arc(x, y, 2.4, 0, 7); ppx.fill();
+    }
+  });
+}
+function pselect(i){
+  psel = i;
+  const s = PIPE[i];
+  pkEl.textContent = s.k; ptEl.textContent = s.t; pdEl.innerHTML = s.d;
+  stageBtns.forEach((b,j)=> b.setAttribute("aria-current", j===i ? "true" : "false"));
+}
+stageBtns.forEach(b => {
+  b.addEventListener("click", () => pselect(+b.dataset.s));
+  b.addEventListener("mouseenter", () => pselect(+b.dataset.s));
+});
+
 readColors();
 new ResizeObserver(scResize).observe(sCv);
 new ResizeObserver(qResize).observe(qCv);
+new ResizeObserver(ppResize).observe(ppCv);
 new ResizeObserver(resize).observe(cv);
 addEventListener("resize", resize);
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors);
 new MutationObserver(readColors).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
 resize();
 select(0);
+pselect(0);
 show((location.hash || "").replace("#","") || 1, false);
 requestAnimationFrame(draw);
 </script>
