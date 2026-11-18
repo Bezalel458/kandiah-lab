@@ -225,7 +225,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
         <button aria-expanded="false"><span class="num">01</span><span class="ttl">small vessel disease is present in 90.2% of the cohort.<span class="sting">at that prevalence a label stops separating people. the dti you already acquire gives a continuous one.</span></span><span class="chev">+</span></button>
         <div class="body">
           <p>Two blinded raters and a modified Fazekas score is the right call for a protocol paper and it's also where the resolution ends. A mean of 4.1 on an ordinal scale, in a cohort where nine in ten are positive, leaves very little variance to explain anything with.</p>
-          <p>BIOCIS already acquires DTI. <em>PSMD</em>  peak width of skeletonised mean diffusivity gives one continuous number per scan: fully automated, no rater, no new scanning. It wants roughly 20 diffusion directions at b≈1000, and if your sequence clears that, the marker is already sitting inside data you have collected. I built that pipeline at UMCG Groningen and ran it across a cohort unattended.</p>
+          <p>BIOCIS already acquires DTI. Peak width of skeletonised mean diffusivity <em>(PSMD)</em> gives one continuous number per scan: fully automated, no rater, no new scanning. It wants roughly 20 diffusion directions at b≈1000, and if your sequence clears that, the marker is already sitting inside data you have collected. I built that pipeline at UMCG Groningen and ran it across a cohort unattended.</p>
           <p class="why">same scans, already on the server. a variable with variance left in it.</p>
         </div>
       </div>
@@ -233,7 +233,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
       <div class="track">
         <button aria-expanded="false"><span class="num">02</span><span class="ttl">task-free fmri is acquired, in a cohort that is 90% vascular.<span class="sting">there the vascular part of the bold signal isn't noise to regress out — it's the thing being studied.</span></span><span class="chev">+</span></button>
         <div class="body">
-          <p>The protocol's imaging objective gathers functional connectivity, blood&ndash;brain barrier permeability and perfusion under one aim  which reads as a neurovascular hypothesis, not just a connectivity one.</p>
+          <p>The protocol's imaging objective gathers functional connectivity, blood&ndash;brain barrier permeability and perfusion under one aim, which reads as a neurovascular hypothesis, not just a connectivity one.</p>
           <p>Standard pipelines assume one canonical haemodynamic response for every subject and treat departures from it as nuisance. In this cohort the <em>shape and latency of that response is itself a measurement</em>. My thesis estimated subject-specific HRFs from resting-state fMRI in ADNI for exactly that reason.</p>
           <p class="why">a neurovascular marker out of scans that are already collected.</p>
         </div>
@@ -243,7 +243,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
         <button aria-expanded="false"><span class="num">03</span><span class="ttl">tau, amyloid and wmh all sit in the same table.<span class="sting">parallel paths, or one running through the other? the imaging side has to be continuous first.</span></span><span class="chev">+</span></button>
         <div class="body">
           <p>Sandhu et al. 2025 asks this directly of the WMH&ndash;cognition link, and the BBB paper puts vascular risk and WMH on the same axis. The question is a mediation question.</p>
-          <p>Mediation is unusually sensitive to measurement error in the mediator noise there biases the estimate toward finding no mediation. <em>The plasma side is already continuous and assay-precise; the imaging side is an ordinal visual score.</em> Fix that asymmetry and the question can actually be asked.</p>
+          <p>Mediation is unusually sensitive to measurement error in the mediator: noise there biases the estimate toward finding no mediation. <em>The plasma side is already continuous and assay-precise; the imaging side is an ordinal visual score.</em> Fix that asymmetry and the question can actually be asked.</p>
           <p class="why">the bottleneck is one variable, and it's the one i can rebuild.</p>
         </div>
       </div>
@@ -261,7 +261,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
   <div class="page" id="p2" hidden>
   <section class="panel">
     <div class="panel-head"><span class="tag">C</span><h2>my reading of the 90.2% · drag the threshold</h2></div>
-    <p class="mine"><b>I read 90.2% as a measurement result, not an epidemiological one.</b> Drag the cut-point and watch how much of the variance in cognition a yes/no label can still carry against the same people, measured continuously. <span class="eq">R&sup2;<sub>split</sub> &le; R&sup2;<sub>continuous</sub>, at every cut</span></p>
+    <p class="mine"><b>I read 90.2% as a measurement result, not an epidemiological one.</b> Drag the cut-point and watch how much of the variance in cognition a yes/no label can still carry, set against the same people measured continuously. <span class="eq">R&sup2;<sub>split</sub> &le; R&sup2;<sub>continuous</sub>, at every cut</span></p>
     <div class="capwrap"><canvas id="sc"></canvas></div>
     <div class="controls">
       <span class="rng">
@@ -275,14 +275,14 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
       </span>
       <span class="hint" id="hint">drag it left, towards 90%.</span>
     </div>
-    <p class="simnote">Simulated cohort, drawn to make the arithmetic visible not BIOCIS data.</p>
+    <p class="simnote">Simulated cohort, drawn to make the arithmetic visible. Not BIOCIS data.</p>
   </section>
 
   <section class="panel prose">
     <div class="panel-head"><span class="tag">D</span><h2>what the reading buys</h2></div>
-    <p>Nothing about the biology changed as you dragged. The <strong>same people, the same scans, the same cognition</strong> only where the line was drawn. What shrank was the share of the variance a yes/no label could still carry, because one group emptied out.</p>
+    <p>Nothing about the biology changed as you dragged. The <strong>same people, the same scans, the same cognition</strong>; all that moved was the line. What shrank was the share of the variance a yes/no label could still carry, because one group emptied out.</p>
     <p>The continuous estimate never moved, and the split never beat it at any cut. That's the argument for <strong>PSMD</strong>: a single automated number per scan, computed from DTI the study already acquires, with no rater and no cut-point to choose.</p>
-    <p>And rater-free matters beyond power. It is what makes a marker <strong>reproducible across sites</strong> the thing a Southeast-Asian, multi-country effort needs before its numbers can be pooled.</p>
+    <p>And rater-free matters beyond power. It is what makes a marker <strong>reproducible across sites</strong>, which is what a Southeast-Asian, multi-country effort needs before its numbers can be pooled.</p>
     <p class="lead">Which would make the 90.2% the start of the measurement problem, not the end of it.</p>
   </section>
   </div>
