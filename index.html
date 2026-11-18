@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Augustine Wisely Bezalel — three questions for the Dementia Research Centre.">
+</head>
+<body>
+<title>Augustine Wisely Bezalel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F7F5F0;
+  --panel:#FFFFFF;
+  --ink:#15171C;
+  --muted:#6B6F76;
+  --rule:#DCD7CD;
+  --accent:#0E6F74;
+  --accent-2:#C2572B;
+  --sans:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1113;--panel:#15181B;--ink:#E9E7E2;--muted:#8E949C;
+    --rule:#262A2F;--accent:#4FB3B8;--accent-2:#E08A5B;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1113;--panel:#15181B;--ink:#E9E7E2;--muted:#8E949C;
+  --rule:#262A2F;--accent:#4FB3B8;--accent-2:#E08A5B;color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--sans);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:clamp(24px,5vw,48px);
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(20px,3.4vw,32px)}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0;
+}
+h1{
+  font-size:clamp(26px,5.2vw,40px);line-height:1.08;margin:6px 0 0;font-weight:600;
+  letter-spacing:-.02em;text-wrap:balance;
+}
+.standfirst{margin:10px 0 0;max-width:58ch;color:var(--muted);font-size:clamp(14px,1.9vw,16px)}
+.standfirst b{color:var(--ink);font-weight:500}
+
+.panel{
+  background:var(--panel);border:1px solid var(--rule);border-radius:3px;
+  padding:clamp(14px,2.4vw,20px);
+}
+.panel-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.tag{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;
+  color:var(--paper);background:var(--ink);padding:2px 6px;border-radius:2px;
+}
+.panel-head h2{
+  margin:0;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-family:var(--mono);
+}
+
+.plot{position:relative;width:100%;aspect-ratio:16/8;max-width:100%;min-height:210px}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.node{
+  position:absolute;transform:translate(-50%,-50%);
+  background:none;border:0;padding:8px 9px;margin:0;cursor:pointer;
+  font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--muted);
+  white-space:nowrap;border-radius:3px;transition:color .18s ease;
+}
+.node:hover{color:var(--ink)}
+.node[aria-current="true"]{color:var(--accent);font-weight:500}
+.node:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+.legend{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;margin-top:14px}
+.legend .k{font-family:var(--mono);font-size:12px;color:var(--accent-2);white-space:nowrap}
+.legend h3{margin:0;font-size:clamp(15px,2.2vw,17px);font-weight:600;letter-spacing:-.01em}
+.legend p{grid-column:2;margin:2px 0 0;font-size:14.5px;color:var(--muted);max-width:60ch;min-width:0}
+.legend p em{color:var(--ink);font-style:normal;font-weight:500}
+
+.bring{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.bring li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline;font-size:14.5px;min-width:0}
+.bring span{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.08em}
+
+footer{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;
+  padding-top:4px;font-family:var(--mono);font-size:12.5px;color:var(--muted);
+}
+footer a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+footer a:hover{border-bottom-color:var(--accent)}
+.mail{display:inline-flex;align-items:center;gap:8px}
+.mail code{font-family:var(--mono);font-size:12.5px;color:var(--ink);user-select:all}
+.copy{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1px solid var(--rule);color:var(--muted);
+  padding:3px 7px;border-radius:2px;cursor:pointer;
+}
+.copy:hover{color:var(--ink);border-color:var(--muted)}
+nav{display:flex;gap:2px;border-bottom:1px solid var(--rule);margin-top:4px}
+nav button{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);
+  padding:8px 2px;margin-right:22px;cursor:pointer;transition:color .16s ease;
+}
+nav button:hover{color:var(--ink)}
+nav button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--accent-2)}
+nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{display:flex;flex-direction:column;gap:clamp(20px,3.4vw,32px)}
+.page[hidden]{display:none}
+
+.tracks{display:grid;gap:0}
+.track{border-top:1px solid var(--rule)}
+.track:first-child{border-top:0}
+.track>button{
+  width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:baseline;
+  background:none;border:0;padding:13px 0;margin:0;cursor:pointer;text-align:left;color:inherit;
+  font-family:inherit;
+}
+.track>button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.track .num{font-family:var(--mono);font-size:11px;color:var(--accent-2);letter-spacing:.08em}
+.track .ttl{font-size:clamp(15px,2.3vw,18px);font-weight:600;letter-spacing:-.012em;min-width:0;line-height:1.3}
+.track .sting{display:block;margin-top:3px;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0}
+.track[data-open="true"] .sting{color:var(--ink)}
+.track .chev{font-family:var(--mono);font-size:13px;color:var(--muted);transition:transform .2s ease}
+.track[data-open="true"] .chev{transform:rotate(45deg)}
+.track[data-open="true"] .ttl{color:var(--accent)}
+.body{display:none;padding:0 0 15px 0;margin-left:28px}
+.track[data-open="true"] .body{display:block}
+.body p{margin:0 0 9px;font-size:14.5px;color:var(--muted);max-width:62ch}
+.body p:last-child{margin-bottom:0}
+.body em{color:var(--ink);font-style:normal;font-weight:500}
+.body .why{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--accent);
+  border-left:2px solid var(--rule);padding-left:10px;
+}
+
+.cite{
+  font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--muted);
+  margin:0 0 14px;max-width:70ch;
+}
+.cite i{color:var(--ink);font-style:normal}
+.qfig{position:relative;width:100%;aspect-ratio:16/5.4;min-height:148px;margin-bottom:4px}
+.qfig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.capwrap{position:relative;width:100%;aspect-ratio:16/7.4;min-height:210px}
+.capwrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:14px}
+.rng{display:flex;align-items:center;gap:10px;flex:1 1 230px;min-width:200px}
+.rng label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;flex:1;height:2px;background:var(--rule);
+  border-radius:2px;outline:none;cursor:pointer;min-width:90px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;
+  background:var(--accent-2);border:2px solid var(--panel);cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:15px;height:15px;border-radius:50%;background:var(--accent-2);
+  border:2px solid var(--panel);cursor:pointer;
+}
+input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.readout{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.readout div{display:flex;flex-direction:column;gap:2px}
+.readout b{font-size:15px;font-weight:500;letter-spacing:0}
+.readout span{color:var(--muted)}
+.r1 b{color:var(--accent-2)} .r2 b{color:var(--muted)} .r3 b{color:var(--accent)}
+.hint{
+  font-family:var(--mono);font-size:11.5px;color:var(--accent-2);letter-spacing:.02em;
+  flex-basis:100%;min-height:1.4em;
+}
+.simnote{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--muted);
+  margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule);
+}
+.mine{
+  margin:0 0 13px;font-size:14px;color:var(--muted);max-width:62ch;
+  border-left:2px solid var(--accent-2);padding-left:11px;
+}
+.mine b{color:var(--ink);font-weight:500}
+.eq{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.02em}
+
+.prose p{margin:0 0 9px;font-size:14.5px;max-width:64ch}
+.prose p:last-child{margin-bottom:0}
+.prose p.lead{font-size:14.5px;font-weight:400;letter-spacing:0}
+.prose strong{font-weight:500}
+
+@media (max-width:520px){
+  .legend{grid-template-columns:1fr;gap:2px}
+  .legend p{grid-column:1}
+  .node{font-size:10px;padding:7px}
+  nav button{margin-right:16px;font-size:10px}
+  .body{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">for the dementia research centre · lkcmedicine, ntu</p>
+    <h1>Augustine Wisely Bezalel</h1>
+    <p class="standfirst" id="sf">four years turning images and signals into numbers that hold up on subjects the model has never seen.</p>
+  </header>
+
+  <nav>
+    <button data-p="1" aria-current="true">01 · what i'd contribute</button>
+    <button data-p="2">02 · how i read your result</button>
+    <button data-p="3">03 · what i've done</button>
+  </nav>
+
+  <div class="page" id="p1">
+  <section class="panel">
+    <div class="panel-head"><span class="tag">A</span><h2>three questions, after reading closely · tap one</h2></div>
+    <p class="cite">from <i>Biomarkers and Cognition Study, Singapore (BIOCIS): Protocol, Study Design, and Preliminary Findings</i> — Leow et al., J Prev Alz Dis 11(4), 2024 — and the 2025 work on white matter hyperintensities and blood&ndash;brain barrier integrity.</p>
+    <div class="qfig"><canvas id="qf" aria-label="schematic of the selected question" role="img"></canvas></div>
+    <div class="tracks">
+
+      <div class="track">
+        <button aria-expanded="false"><span class="num">01</span><span class="ttl">small vessel disease is present in 90.2% of the cohort.<span class="sting">at that prevalence a label stops separating people. the dti you already acquire gives a continuous one.</span></span><span class="chev">+</span></button>
+        <div class="body">
+          <p>Two blinded raters and a modified Fazekas score is the right call for a protocol paper — and it's also where the resolution ends. A mean of 4.1 on an ordinal scale, in a cohort where nine in ten are positive, leaves very little variance to explain anything with.</p>
+          <p>BIOCIS already acquires DTI. <em>PSMD</em> — peak width of skeletonised mean diffusivity — is computed from it: one continuous number per scan, fully automated, no rater, no new acquisition. I built that pipeline at UMCG Groningen and ran it across a cohort unattended.</p>
+          <p class="why">same scans, already on the server. a variable with variance left in it.</p>
+        </div>
+      </div>
+
+      <div class="track">
+        <button aria-expanded="false"><span class="num">02</span><span class="ttl">task-free fmri is acquired, in a cohort that is 90% vascular.<span class="sting">there the vascular part of the bold signal isn't noise to regress out — it's the thing being studied.</span></span><span class="chev">+</span></button>
+        <div class="body">
+          <p>The protocol's imaging objective gathers functional connectivity, blood&ndash;brain barrier permeability and perfusion under one aim — which reads as a neurovascular hypothesis, not just a connectivity one.</p>
+          <p>Standard pipelines assume one canonical haemodynamic response for every subject and treat departures from it as nuisance. In this cohort the <em>shape and latency of that response is itself a measurement</em>. My thesis estimated subject-specific HRFs from resting-state fMRI in ADNI for exactly that reason.</p>
+          <p class="why">a neurovascular marker out of scans that are already collected.</p>
+        </div>
+      </div>
+
+      <div class="track">
+        <button aria-expanded="false"><span class="num">03</span><span class="ttl">tau, amyloid and wmh all sit in the same table.<span class="sting">parallel paths, or one running through the other? the imaging side has to be continuous first.</span></span><span class="chev">+</span></button>
+        <div class="body">
+          <p>Sandhu et al. 2025 asks this directly of the WMH&ndash;cognition link, and the BBB paper puts vascular risk and WMH on the same axis. The question is a mediation question.</p>
+          <p>Mediation is unusually sensitive to measurement error in the mediator — noise there biases the estimate toward finding no mediation. <em>The plasma side is already continuous and assay-precise; the imaging side is an ordinal visual score.</em> Fix that asymmetry and the question can actually be asked.</p>
+          <p class="why">the bottleneck is one variable, and it's the one i can rebuild.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="panel prose">
+    <div class="panel-head"><span class="tag">B</span><h2>why this centre</h2></div>
+    <p class="lead">Diffusion pipelines at Groningen. Resting-state fMRI on ADNI. Four years of making images into numbers that survive a held-out subject.</p>
+    <p class="lead">BIOCIS scans on a 3T Siemens Prisma. I spend my working days inside Siemens Healthineers' quality systems — traceability, version control, records that survive an audit.</p>
+  </section>
+  </div>
+
+  <div class="page" id="p2" hidden>
+  <section class="panel">
+    <div class="panel-head"><span class="tag">C</span><h2>my reading of the 90.2% · drag the threshold</h2></div>
+    <p class="mine"><b>I read 90.2% as a measurement result, not an epidemiological one.</b> Drag the cut-point and watch how much of the variance in cognition a yes/no label can still carry — against the same people, measured continuously. <span class="eq">R&sup2;<sub>split</sub> &le; R&sup2;<sub>continuous</sub>, at every cut</span></p>
+    <div class="capwrap"><canvas id="sc"></canvas></div>
+    <div class="controls">
+      <span class="rng">
+        <label for="th">cut-point</label>
+        <input type="range" id="th" min="4" max="96" value="62" step="1" aria-label="burden cut-point for calling small vessel disease present">
+      </span>
+      <span class="readout">
+        <div class="r1"><b id="rPrev">—</b><span>prevalence</span></div>
+        <div class="r2"><b id="rD">—</b><span>variance explained · split</span></div>
+        <div class="r3"><b id="rR">—</b><span>variance explained · continuous</span></div>
+      </span>
+      <span class="hint" id="hint">drag it left, towards 90%.</span>
+    </div>
+    <p class="simnote">Simulated cohort, drawn to make the arithmetic visible — not BIOCIS data.</p>
+  </section>
+
+  <section class="panel prose">
+    <div class="panel-head"><span class="tag">D</span><h2>what the reading buys</h2></div>
+    <p>Nothing about the biology changed as you dragged. The <strong>same people, the same scans, the same cognition</strong> — only where the line was drawn. What shrank was the share of the variance a yes/no label could still carry, because one group emptied out.</p>
+    <p>The continuous estimate never moved, and the split never beat it at any cut. That's the argument for <strong>PSMD</strong>: a single automated number per scan, computed from DTI the study already acquires, with no rater and no cut-point to choose.</p>
+    <p>And rater-free matters beyond power. It is what makes a marker <strong>reproducible across sites</strong> — the thing a Southeast-Asian, multi-country effort needs before its numbers can be pooled.</p>
+    <p class="lead">Which would make the 90.2% the start of the measurement problem, not the end of it.</p>
+  </section>
+  </div>
+
+  <div class="page" id="p3" hidden>
+  <section class="panel">
+    <div class="panel-head"><span class="tag">E</span><h2>state space of prior work</h2></div>
+    <div class="plot">
+      <canvas id="c"></canvas>
+      <button class="node" data-i="0" aria-current="true">pipelines at scale</button>
+      <button class="node" data-i="1">timing in the bold signal</button>
+      <button class="node" data-i="2">bodies, no sensors</button>
+      <button class="node" data-i="3">states from stray signals</button>
+    </div>
+    <div class="legend">
+      <span class="k" id="k">01</span>
+      <h3 id="t">pipelines at scale</h3>
+      <p id="d">An automated FSL/Luigi diffusion-imaging pipeline at <em>UMCG Groningen</em>, run unattended across a cohort — linking arterial calcification to white-matter injury measured by PSMD.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><span class="tag">F</span><h2>what i'd bring</h2></div>
+    <ul class="bring">
+      <li><span>01</span><div>Automated imaging pipelines (FSL, Luigi, Python) that run unattended over a cohort and return one number per scan, with the provenance to say where it came from.</div></li>
+      <li><span>02</span><div>Machine learning on high-dimensional clinical data, validated on held-out <em>subjects</em> rather than held-out scans.</div></li>
+      <li><span>03</span><div>Engineering discipline from Siemens Healthineers — traceability, version control and records that survive an audit.</div></li>
+    </ul>
+  </section>
+  </div>
+
+  <footer>
+    <span class="mail"><code>augustine0521@gmail.com</code><button class="copy" id="cp">copy</button></span>
+    <a href="https://www.linkedin.com/in/augustine-w-bezalel-5a985a250" target="_blank" rel="noopener">linkedin</a>
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {k:"01", t:"pipelines at scale",
+   d:'An automated FSL/Luigi diffusion-imaging pipeline at <em>UMCG Groningen</em>, run unattended across a cohort — linking arterial calcification to white-matter injury measured by PSMD.'},
+  {k:"02", t:"timing in the bold signal",
+   d:'Undergraduate thesis: subject-specific hemodynamic response functions estimated from resting-state fMRI on the <em>ADNI dataset</em>, as a neurovascular marker in dementia.'},
+  {k:"03", t:"bodies, no sensors",
+   d:'Gait disorders detected from Wi-Fi channel state information — nothing worn, nothing seen. Validated on participants the model had never encountered. <em>IEEE SPS SIGMA grant (USD 4,000) with Dr Deepak Mishra, UNSW Sydney; submitted to ICASSP 2027</em>.'},
+  {k:"04", t:"states from stray signals",
+   d:'Emotional state classified from canine vocalisations (<em>41st World Veterinary Association Congress, Tokyo</em>), and a webcam gaze-tracking system turning eye movement into objective attention measures for assessing children with ASD.'}
+];
+const P = [[0.13,0.70],[0.39,0.28],[0.63,0.64],[0.88,0.26]];
+const SEG = 110;
+
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const nodes = [...document.querySelectorAll(".node")];
+const kEl = document.getElementById("k"), tEl = document.getElementById("t"), dEl = document.getElementById("d");
+let W = 0, H = 0, path = [], sel = 0, pos = 0, target = 0, col = {};
+let last = performance.now(), dt = 1/60;
+
+function readColors(){
+  const s = getComputedStyle(document.documentElement);
+  col = {
+    rule: s.getPropertyValue("--rule").trim(),
+    accent: s.getPropertyValue("--accent").trim(),
+    accent2: s.getPropertyValue("--accent-2").trim(),
+    muted: s.getPropertyValue("--muted").trim(),
+    panel: s.getPropertyValue("--panel").trim(),
+    ink: s.getPropertyValue("--ink").trim(),
+    paper: s.getPropertyValue("--paper").trim()
+  };
+}
+function catmull(p0,p1,p2,p3,t){
+  const t2=t*t, t3=t2*t;
+  return [
+    0.5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
+    0.5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+  ];
+}
+function buildPath(){
+  path = [];
+  const pts = [P[0], ...P, P[P.length-1]];
+  for(let i=1;i<pts.length-2;i++){
+    for(let j=0;j<SEG;j++){
+      const [x,y] = catmull(pts[i-1],pts[i],pts[i+1],pts[i+2], j/SEG);
+      path.push([x*W, y*H]);
+    }
+  }
+  const [lx,ly] = P[P.length-1];
+  path.push([lx*W, ly*H]);
+}
+function resize(){
+  const r = cv.getBoundingClientRect();
+  if(!r.width) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  W = r.width; H = r.height;
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  buildPath();
+  nodes.forEach((n,i)=>{
+    n.style.left = (P[i][0]*100) + "%";
+    n.style.top  = (P[i][1]*100 - (i%2 ? 13 : -13)) + "%";
+  });
+}
+function draw(){
+  const now = performance.now();
+  dt = Math.min(0.05, (now - last)/1000); last = now;
+  if(!W){ scFrame(); qFrame(); requestAnimationFrame(draw); return; }
+  ctx.clearRect(0,0,W,H);
+
+  ctx.strokeStyle = col.rule; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for(let i=1;i<6;i++){ const x=W*i/6; ctx.moveTo(x,0); ctx.lineTo(x,H); }
+  for(let i=1;i<4;i++){ const y=H*i/4; ctx.moveTo(0,y); ctx.lineTo(W,y); }
+  ctx.stroke();
+
+  ctx.strokeStyle = col.accent; ctx.globalAlpha = .34; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(path[0][0], path[0][1]);
+  for(const [x,y] of path) ctx.lineTo(x,y);
+  ctx.stroke(); ctx.globalAlpha = 1;
+
+  P.forEach((p,i)=>{
+    const x=p[0]*W, y=p[1]*H, on = i===sel;
+    if(on){
+      ctx.strokeStyle = col.accent; ctx.globalAlpha = .4; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x,y,13,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = .18;
+      ctx.beginPath(); ctx.arc(x,y,20,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = on ? col.accent : col.muted;
+    ctx.globalAlpha = on ? 1 : .5;
+    ctx.beginPath(); ctx.arc(x,y,on?4.5:3,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+
+  pos += (target - pos) * 0.075;
+  const idx = Math.max(0, Math.min(path.length-1, Math.round(pos)));
+  const [dx,dy] = path[idx];
+  ctx.fillStyle = col.panel;
+  ctx.beginPath(); ctx.arc(dx,dy,7,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = col.accent2;
+  ctx.beginPath(); ctx.arc(dx,dy,4,0,Math.PI*2); ctx.fill();
+
+  scFrame();
+  qFrame();
+  requestAnimationFrame(draw);
+}
+function select(i){
+  sel = i; target = i*SEG;
+  const d = DATA[i];
+  kEl.textContent = d.k; tEl.textContent = d.t; dEl.innerHTML = d.d;
+  nodes.forEach((n,j)=> n.setAttribute("aria-current", j===i ? "true" : "false"));
+}
+nodes.forEach(n => n.addEventListener("click", () => select(+n.dataset.i)));
+cv.addEventListener("click", e => {
+  const r = cv.getBoundingClientRect(), mx = e.clientX-r.left, my = e.clientY-r.top;
+  let best = -1, bd = 30;
+  P.forEach((p,i)=>{ const d = Math.hypot(p[0]*W-mx, p[1]*H-my); if(d<bd){ bd=d; best=i; } });
+  if(best >= 0) select(best);
+});
+document.getElementById("cp").addEventListener("click", async e => {
+  const btn = e.currentTarget;
+  try{
+    await navigator.clipboard.writeText("augustine0521@gmail.com");
+    btn.textContent = "copied";
+  }catch{
+    const r = document.createRange();
+    r.selectNodeContents(document.querySelector(".mail code"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = "select";
+  }
+  setTimeout(()=>{ btn.textContent = "copy"; }, 1600);
+});
+
+/* ---- page switching ---- */
+const SF = {
+  1: '<b>three questions i came away with</b> from the biocis protocol — and where i’d start on each.',
+  2: 'the 90.2%, re-read as a measurement problem. <b>drag the cut-point yourself.</b>',
+  3: 'four years turning images and signals into numbers that hold up on unseen subjects — plotted as a trajectory.'
+};
+const sfEl = document.getElementById("sf");
+const tabs = [...document.querySelectorAll("nav button")];
+const pages = [...document.querySelectorAll(".page")];
+function show(p, push){
+  p = [1,2,3].includes(+p) ? +p : 1;
+  pages.forEach(el => el.hidden = el.id !== "p" + p);
+  tabs.forEach(t => t.setAttribute("aria-current", +t.dataset.p === p ? "true" : "false"));
+  sfEl.innerHTML = SF[p];
+  if(push){
+    try{ history.replaceState(null, "", "#" + p); }catch{}
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  if(p === 1) qResize();
+  if(p === 2) scResize();
+  if(p === 3) resize();
+}
+tabs.forEach(t => t.addEventListener("click", () => show(+t.dataset.p, true)));
+
+/* ---- accordion ---- */
+document.querySelectorAll(".track > button").forEach((b, i) => {
+  b.addEventListener("click", () => {
+    const tr = b.parentElement, open = tr.dataset.open === "true";
+    document.querySelectorAll(".track").forEach(o => {
+      o.dataset.open = "false";
+      o.querySelector("button").setAttribute("aria-expanded","false");
+    });
+    if(!open){ tr.dataset.open = "true"; b.setAttribute("aria-expanded","true"); }
+    if(qsel !== i){ qsel = i; qt = 0; }
+  });
+  b.addEventListener("mouseenter", () => { if(qsel !== i){ qsel = i; qt = 0; } });
+});
+
+/* ---- page 1 schematics ---- */
+const qCv = document.getElementById("qf"), qx = qCv.getContext("2d");
+let QW = 0, QH = 0, qsel = 0, qt = 0;
+function qResize(){
+  const r = qCv.getBoundingClientRect();
+  if(!r.width) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  QW = r.width; QH = r.height;
+  qCv.width = Math.round(QW*dpr); qCv.height = Math.round(QH*dpr);
+  qx.setTransform(dpr,0,0,dpr,0,0);
+}
+function txt(s, x, y, c, al){ qx.fillStyle = c; qx.textAlign = al || "left"; qx.fillText(s, x, y); }
+function arrow(x1, y1, x2, y2, c){
+  qx.strokeStyle = c; qx.lineWidth = 1.3; qx.setLineDash([4,4]); qx.lineDashOffset = -qt*22;
+  qx.beginPath(); qx.moveTo(x1,y1); qx.lineTo(x2,y2); qx.stroke(); qx.setLineDash([]);
+  const a = Math.atan2(y2-y1, x2-x1);
+  qx.fillStyle = c; qx.beginPath(); qx.moveTo(x2,y2);
+  qx.lineTo(x2 - 7*Math.cos(a-0.45), y2 - 7*Math.sin(a-0.45));
+  qx.lineTo(x2 - 7*Math.cos(a+0.45), y2 - 7*Math.sin(a+0.45)); qx.fill();
+}
+
+// 01 — ordinal ladder vs a continuous axis
+function s0(){
+  const lw = QW*0.34, top = 16, bot = QH - 26;
+  const steps = 7, sh = (bot-top)/steps;
+  for(let i=0;i<steps;i++){
+    const y = bot - i*sh - sh/2;
+    const on = i >= 3;
+    qx.strokeStyle = on ? col.accent2 : col.rule;
+    qx.globalAlpha = on ? .9 : .5; qx.lineWidth = on ? 1.8 : 1;
+    qx.beginPath(); qx.moveTo(22, y); qx.lineTo(22 + lw*0.42, y); qx.stroke();
+    qx.globalAlpha = 1;
+  }
+  txt("fazekas", 22, top + 2, col.muted);
+  txt("0–6", 22, bot + 12, col.muted);
+  qx.strokeStyle = col.accent2; qx.lineWidth = 1.2; qx.globalAlpha = .7;
+  const bx = 22 + lw*0.42 + 7, byT = bot - 6*sh - sh/2, byB = bot - 3*sh - sh/2;
+  qx.beginPath(); qx.moveTo(bx, byT); qx.lineTo(bx + 5, byT);
+  qx.lineTo(bx + 5, byB); qx.lineTo(bx, byB); qx.stroke(); qx.globalAlpha = 1;
+  txt("90.2%", bx + 10, (byT + byB)/2, col.accent2);
+
+  const rx = QW - QW*0.38, rw = QW*0.34;
+  qx.strokeStyle = col.rule; qx.lineWidth = 1;
+  qx.beginPath(); qx.moveTo(rx, bot); qx.lineTo(rx + rw, bot); qx.stroke();
+  qx.strokeStyle = col.accent; qx.lineWidth = 1.7; qx.beginPath();
+  for(let j=0;j<=120;j++){
+    const u = j/120, x = rx + u*rw;
+    const v = Math.exp(-Math.pow((u-0.42)/0.24, 2)) * 0.82;
+    const y = bot - v*(bot-top);
+    j ? qx.lineTo(x,y) : qx.moveTo(x,y);
+  }
+  qx.stroke();
+  txt("psmd · continuous", rx, top + 2, col.accent);
+  const mk = rx + rw*(0.3 + 0.44*(0.5+0.5*Math.sin(qt*0.9)));
+  qx.fillStyle = col.accent2; qx.beginPath(); qx.arc(mk, bot, 3.5, 0, 7); qx.fill();
+
+  const midY = (top+bot)/2;
+  arrow(22 + lw*0.5, midY, rx - 12, midY, col.muted);
+  txt("same scans", (22 + lw*0.5 + rx)/2, midY - 13, col.ink, "center");
+}
+
+// 02 — canonical HRF vs a subject-specific one
+function s1(){
+  const lm = 46, rm = 96, top = 16, bot = QH - 24, pw = QW - lm - rm, ph = bot - top;
+  qx.strokeStyle = col.rule; qx.lineWidth = 1;
+  qx.beginPath(); qx.moveTo(lm, bot - ph*0.22); qx.lineTo(lm + pw, bot - ph*0.22); qx.stroke();
+  function hrf(u, d, disp){
+    const t = u*22 - d;
+    if(t <= 0) return 0;
+    const a = Math.pow(t, 5.2) * Math.exp(-t/(0.9*disp));
+    const b = 0.18 * Math.pow(t, 9) * Math.exp(-t/(1.0*disp));
+    return (a - b) / 2600;
+  }
+  [[0, 1, col.muted, "canonical"], [2.6, 1.42, col.accent, "this subject"]].forEach(([d, disp, c, lab], i)=>{
+    qx.strokeStyle = c; qx.lineWidth = i ? 1.9 : 1.4;
+    if(!i){ qx.setLineDash([3,3]); }
+    qx.beginPath();
+    for(let j=0;j<=140;j++){
+      const u = j/140, x = lm + u*pw;
+      const y = (bot - ph*0.22) - hrf(u, d, disp)*ph*0.62;
+      j ? qx.lineTo(x,y) : qx.moveTo(x,y);
+    }
+    qx.stroke(); qx.setLineDash([]);
+    txt(lab, lm + pw + 8, top + 10 + i*16, c);
+  });
+  const p1 = lm + pw*(5.0/22), p2 = lm + pw*(8.2/22);
+  qx.strokeStyle = col.accent2; qx.lineWidth = 1.2; qx.setLineDash([2,2]);
+  [p1,p2].forEach(x=>{ qx.beginPath(); qx.moveTo(x, top+6); qx.lineTo(x, bot - ph*0.22); qx.stroke(); });
+  qx.setLineDash([]);
+  arrow(p1, top + 12, p2, top + 12, col.accent2);
+  txt("Δ latency", (p1+p2)/2, top + 1, col.ink, "center");
+  txt("bold", 0, bot - ph*0.22, col.muted);
+}
+
+// 03 — mediation: which path
+function s2(){
+  const yT = QH*0.26, yB = QH*0.74, xa = 44, xb = QW*0.5, xc = QW - 52;
+  txt("plasma", 0, yT, col.accent);
+  txt("p-tau · gfap", 0, yT + 13, col.muted);
+  txt("cognition", xc + 6, yT, col.ink);
+  txt("wmh", xb - 16, yB, col.accent2);
+
+  arrow(xa, yT, xc - 4, yT, col.muted);
+  arrow(xa, yT + 8, xb - 26, yB - 6, col.accent);
+  arrow(xb + 22, yB - 6, xc - 4, yT + 8, col.accent);
+
+  const blink = 0.5 + 0.5*Math.sin(qt*2.1);
+  qx.globalAlpha = .2 + .35*blink;
+  qx.fillStyle = col.accent2;
+  qx.beginPath(); qx.arc(xb, (yT+yB)/2 + 4, 13, 0, 7); qx.fill();
+  qx.globalAlpha = 1;
+  qx.font = '500 12px "IBM Plex Mono", monospace';
+  txt("?", xb, (yT+yB)/2 + 4, col.accent2, "center");
+  qx.font = '10px "IBM Plex Mono", monospace';
+  txt("direct", (xa+xc)/2, yT - 12, col.muted, "center");
+  txt("mediated", xb, yB + 15, col.accent, "center");
+}
+function qFrame(){
+  if(!QW) return;
+  qt += dt;
+  qx.clearRect(0, 0, QW, QH);
+  qx.font = '10px "IBM Plex Mono", monospace'; qx.textBaseline = "middle";
+  [s0, s1, s2][qsel]();
+}
+
+/* ---- page 2: the cut-point ---- */
+const sCv = document.getElementById("sc"), sx = sCv.getContext("2d");
+let SW = 0, SH = 0, thresh = 0.62;
+// one fixed synthetic cohort — burden (0..1, right-skewed) vs cognition
+const SUBJ = (() => {
+  let s = 20240521;
+  const rnd = () => (s = (s*1664525 + 1013904223) % 4294967296) / 4294967296;
+  const gau = () => { let u=0,v=0; while(!u) u=rnd(); while(!v) v=rnd();
+    return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const out = [];
+  for(let i=0;i<240;i++){
+    let b = 0.30 + 0.42*Math.pow(rnd(), 0.52) + 0.07*gau();
+    b = Math.max(0.02, Math.min(0.99, b));
+    const cog = Math.max(0.02, Math.min(0.99, 0.84 - 0.56*b + 0.11*gau()));
+    out.push({b, cog});
+  }
+  return out;
+})();
+const R_FIXED = (() => {
+  const n = SUBJ.length;
+  const mb = SUBJ.reduce((a,p)=>a+p.b,0)/n, mc = SUBJ.reduce((a,p)=>a+p.cog,0)/n;
+  let sbc=0, sb=0, sc2=0;
+  for(const p of SUBJ){ const db=p.b-mb, dc=p.cog-mc; sbc+=db*dc; sb+=db*db; sc2+=dc*dc; }
+  return sbc/Math.sqrt(sb*sc2);
+})();
+function scResize(){
+  const r = sCv.getBoundingClientRect();
+  if(!r.width) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  SW = r.width; SH = r.height;
+  sCv.width = Math.round(SW*dpr); sCv.height = Math.round(SH*dpr);
+  sx.setTransform(dpr,0,0,dpr,0,0);
+}
+function stats(){
+  const hi = SUBJ.filter(p => p.b >= thresh), lo = SUBJ.filter(p => p.b < thresh);
+  const prev = hi.length / SUBJ.length;
+  let r2 = NaN;
+  if(hi.length > 1 && lo.length > 1){
+    const m = a => a.reduce((x,p)=>x+p.cog,0)/a.length;
+    const v = (a,mu) => a.reduce((x,p)=>x+(p.cog-mu)*(p.cog-mu),0)/(a.length-1);
+    const mh = m(hi), ml = m(lo), n1 = hi.length, n2 = lo.length;
+    const sp = Math.sqrt(((n1-1)*v(hi,mh) + (n2-1)*v(lo,ml)) / (n1+n2-2));
+    if(sp > 0){
+      // point-biserial r² — the variance in cognition a yes/no label can carry
+      const t = (ml - mh) / (sp * Math.sqrt(1/n1 + 1/n2));
+      r2 = (t*t) / (t*t + n1 + n2 - 2);
+    }
+  }
+  return {prev, r2, nLo: lo.length};
+}
+function scFrame(){
+  if(!SW) return;
+  const lm = 44, rm = 18, top = 16, bot = SH - 28, pw = SW - lm - rm, ph = bot - top;
+  const X = b => lm + b*pw, Y = c => bot - c*ph;
+  sx.clearRect(0,0,SW,SH);
+  sx.font = '10px "IBM Plex Mono", monospace'; sx.textBaseline = "middle";
+
+  sx.strokeStyle = col.rule; sx.lineWidth = 1;
+  sx.beginPath(); sx.moveTo(lm, bot); sx.lineTo(lm+pw, bot); sx.moveTo(lm, top); sx.lineTo(lm, bot); sx.stroke();
+  sx.fillStyle = col.muted; sx.textAlign = "left";
+  sx.fillText("white-matter burden →", lm + 2, SH - 11);
+  sx.save(); sx.translate(12, (top+bot)/2); sx.rotate(-Math.PI/2);
+  sx.textAlign = "center"; sx.fillText("cognition", 0, 0); sx.restore();
+
+  const tx = X(thresh);
+  sx.fillStyle = col.accent2; sx.globalAlpha = .055;
+  sx.fillRect(tx, top, lm + pw - tx, ph); sx.globalAlpha = 1;
+  sx.strokeStyle = col.accent2; sx.lineWidth = 1.5; sx.setLineDash([4,3]);
+  sx.beginPath(); sx.moveTo(tx, top); sx.lineTo(tx, bot); sx.stroke(); sx.setLineDash([]);
+
+  for(const p of SUBJ){
+    const hi = p.b >= thresh;
+    sx.fillStyle = hi ? col.accent2 : col.accent;
+    sx.globalAlpha = hi ? .5 : .72;
+    sx.beginPath(); sx.arc(X(p.b), Y(p.cog), 2.6, 0, 7); sx.fill();
+  }
+  sx.globalAlpha = 1;
+
+  // continuous fit — unaffected by the cut-point
+  const n = SUBJ.length;
+  const mb = SUBJ.reduce((a,p)=>a+p.b,0)/n, mc = SUBJ.reduce((a,p)=>a+p.cog,0)/n;
+  let sbc=0, sb=0;
+  for(const p of SUBJ){ sbc += (p.b-mb)*(p.cog-mc); sb += (p.b-mb)*(p.b-mb); }
+  const slope = sbc/sb, icpt = mc - slope*mb;
+  sx.strokeStyle = col.accent; sx.lineWidth = 1.8;
+  sx.beginPath(); sx.moveTo(X(0.02), Y(icpt + slope*0.02)); sx.lineTo(X(0.99), Y(icpt + slope*0.99)); sx.stroke();
+
+  // group means
+  const st = stats();
+  [[true, col.accent2],[false, col.accent]].forEach(([hi, c])=>{
+    const g = SUBJ.filter(p => (p.b >= thresh) === hi);
+    if(!g.length) return;
+    const my = g.reduce((a,p)=>a+p.cog,0)/g.length;
+    const x0 = hi ? tx : lm, x1 = hi ? lm+pw : tx;
+    sx.strokeStyle = c; sx.lineWidth = 2.2; sx.globalAlpha = .85;
+    sx.beginPath(); sx.moveTo(x0+2, Y(my)); sx.lineTo(x1-2, Y(my)); sx.stroke();
+    sx.globalAlpha = 1;
+  });
+
+  const r2c = R_FIXED*R_FIXED;
+  document.getElementById("rPrev").textContent = Math.round(st.prev*100) + "%";
+  document.getElementById("rD").textContent = isNaN(st.r2) ? "—" : Math.round(st.r2*100) + "%";
+  document.getElementById("rR").textContent = Math.round(r2c*100) + "%";
+  const h = document.getElementById("hint");
+  if(st.prev >= 0.88)
+    h.textContent = "90% positive — the comparison group is " + st.nLo + " people. the label now carries "
+      + Math.round(st.r2*100) + "% where the ruler carries " + Math.round(r2c*100) + "%.";
+  else if(st.prev >= 0.7) h.textContent = "keep going left, towards 90%.";
+  else if(st.prev <= 0.2) h.textContent = "a rare label separates cleanly — and still never beats the ruler.";
+  else h.textContent = "drag it left, towards 90%.";
+}
+const thEl = document.getElementById("th");
+thEl.addEventListener("input", e => { thresh = +e.currentTarget.value / 100; });
+
+readColors();
+new ResizeObserver(scResize).observe(sCv);
+new ResizeObserver(qResize).observe(qCv);
+new ResizeObserver(resize).observe(cv);
+addEventListener("resize", resize);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors);
+new MutationObserver(readColors).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+resize();
+select(0);
+show((location.hash || "").replace("#","") || 1, false);
+requestAnimationFrame(draw);
+</script>
+
+</body>
+</html>
